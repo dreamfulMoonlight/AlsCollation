@@ -11,6 +11,10 @@
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
+#include <pcl/filters/passthrough.h>  //直通滤波相关
+#include <pcl/registration/icp.h>
+#include <pcl/segmentation/sac_segmentation.h>
+#include <pcl/sample_consensus/method_types.h>
 
 using namespace std;
 typedef pcl::PointXYZI ptype;
@@ -27,9 +31,12 @@ public:
 	~alscloud();
 	void readlas();
 	void radiusFilter();
-	void visual();
+	void visual(ptrtype p1);
+	void passthrough();
 	ptrtype getcloud() { return als_cloud; }
-	void planeExtract();
+	void roofExtract();
+	void roadExtract();
+	ptrtype road_cloud, roof_cloud;
 private:
 	const char* als_path;
 	ptrtype als_cloud;
@@ -43,9 +50,9 @@ public:
 	~AlsManager() {}
 
 	void WriteLas();
-	void cloudvisual(const char* name);
+	void cloudvisual(ptrtype src,ptrtype tgt, const char* name);
 	void Hcollation();
-
+	void XYcollation();
 private:
 	alscloud als_1, als_2;
 };

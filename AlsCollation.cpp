@@ -16,14 +16,22 @@ int main()
     //读取las文件并进行半径滤波处理
     alscloud als_1(in_als1), als_2(in_als2);
     als_1.radiusFilter();
-    //als_1.visual();
-    
+    //als_1.visual();  
     als_2.radiusFilter();
     //als_2.visual();
     
     //提取屋顶面
-    als_1.planeExtract();
-    als_2.planeExtract();
+    als_1.roofExtract();
+    als_2.roofExtract();
+    //提取路面
+    als_1.roadExtract();
+    als_2.roadExtract();
+
+    AlsManager opt1(als_1, als_2);
+    //进行平面配准
+    opt1.XYcollation();
+    //进行高程配准
+    opt1.Hcollation();
     std::cout << "Hello World!\n";
 }
 
