@@ -15,6 +15,7 @@
 #include <pcl/registration/icp.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/sample_consensus/method_types.h>
+#include"CTrajectory.h"
 
 using namespace std;
 typedef pcl::PointXYZI ptype;
@@ -48,13 +49,14 @@ public:
 	AlsManager() {}
 	AlsManager(alscloud s1, alscloud s2);
 	~AlsManager() {}
-
+	void centralize(ptrtype mls_vscloud, ptrtype als_vscloud);
 	void WriteLas();
 	void cloudvisual(ptrtype src,ptrtype tgt, const char* name);
 	void Hcollation();
 	void XYcollation();
 private:
 	alscloud als_1, als_2;
+	CTScanTrj trj;
 };
 
 typedef struct flat_grid {

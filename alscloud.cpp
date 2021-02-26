@@ -301,7 +301,8 @@ void AlsManager::XYcollation()
 	//提取点云最值
 	vector<float> trans(3);
 	Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity();
-
+	centralize(als_1.roof_cloud, als_2.roof_cloud);
+	ptype cloud_transform = als_1.roof_cloud->points[0];
 	pcl::IterativeClosestPoint<ptype, ptype> icp;
 	int max_iter = 30;
 	icp.setMaximumIterations(max_iter);
@@ -317,6 +318,8 @@ void AlsManager::XYcollation()
 	trans[1] = Mtransformation(1, 3);
 	trans[2] = Mtransformation(2, 3);
 	cout << "matrix:\n" << icp.getFinalTransformation() << endl;
+	cout << cloud_transform.x - als_1.roof_cloud->points[0].x << endl;
+	cout << cloud_transform.y - als_1.roof_cloud->points[0].y << endl;
 }
 
 void AlsManager::Hcollation()
@@ -324,7 +327,8 @@ void AlsManager::Hcollation()
 	//提取点云最值
 	vector<float> trans(3);
 	Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity();
-
+	centralize(als_1.road_cloud, als_2.road_cloud);
+	ptype cloud_transform = als_1.road_cloud->points[0];
 	pcl::IterativeClosestPoint<ptype, ptype> icp;
 	int max_iter = 10;
 	icp.setMaximumIterations(max_iter);
@@ -340,4 +344,23 @@ void AlsManager::Hcollation()
 	trans[1] = Mtransformation(1, 3);
 	trans[2] = Mtransformation(2, 3);
 	cout << "matrix:\n" << icp.getFinalTransformation() << endl;
+	cout << cloud_transform.z - als_1.road_cloud->points[0].z << endl;
+}
+
+void AlsManager::centralize(ptrtype mls_vscloud, ptrtype als_vscloud)
+{
+	ptype pmin = mls_vscloud->points[0];
+
+	for (size_t i = 0; i < mls_vscloud->points.size(); i++)
+	{
+		mls_vscloud->points[i].x -= pmin.x;
+		mls_vscloud->points[i].y -= pmin.y;
+		mls_vscloud->points[i].z -= pmin.z;
+	}
+	for (size_t i = 0; i < als_vscloud->points.size(); i++)
+	{
+		als_vscloud->points[i].x -= pmin.x;
+		als_vscloud->points[i].y -= pmin.y;
+		als_vscloud->points[i].z -= pmin.z;
+	}
 }
